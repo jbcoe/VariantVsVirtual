@@ -25,14 +25,17 @@ int main(int argc, const char *argv[]) {
 
   int odd_count = 0;
 
+  auto t = make_timer("dispose variants");
   std::vector<number> numbers;
   numbers.reserve(count);
-  std::generate_n(std::back_inserter(numbers), count, [&]() -> number {
-    if (generator())
-      return odd();
-    return even();
-  });
-
+  {
+    auto t = make_timer("build variants");
+    std::generate_n(std::back_inserter(numbers), count, [&]() -> number {
+      if (generator())
+        return odd();
+      return even();
+    });
+  }
   {
     auto t = make_timer("count variants");
     auto odds =

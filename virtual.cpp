@@ -28,15 +28,18 @@ int main(int argc, const char *argv[]) {
 
   int odd_count = 0;
 
+  auto t = make_timer("dispose virtuals");
   std::vector<std::unique_ptr<number>> numbers;
   numbers.reserve(count);
-  std::generate_n(std::back_inserter(numbers), count,
-                  [&]() -> std::unique_ptr<number> {
-                    if (generator())
-                      return std::make_unique<odd>();
-                    return std::make_unique<even>();
-                  });
-
+  {
+    auto t = make_timer("build virtuals");
+    std::generate_n(std::back_inserter(numbers), count,
+                    [&]() -> std::unique_ptr<number> {
+                      if (generator())
+                        return std::make_unique<odd>();
+                      return std::make_unique<even>();
+                    });
+  }
   {
     auto t = make_timer("count virtuals");
     auto odds = std::count_if(numbers.begin(), numbers.end(),
